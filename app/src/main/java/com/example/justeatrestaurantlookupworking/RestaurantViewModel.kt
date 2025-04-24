@@ -7,16 +7,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class RestaurantViewModel : ViewModel() {
-    private val _restaurantData = MutableLiveData("no data")
+    private val _restaurantData = MutableLiveData("No data")
     val restaurantData: LiveData<String> get() = _restaurantData
 
-    init {
-        viewModelScope.launch { //Coroutine scope (launched asynchronously)
-            getRestaurant("EC4M7RF")
+    fun getRestaurant(postCode: String) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.apiService.getRestaurants(postCode, limit = 2)
+                _restaurantData.value = response.toString()
+            } catch (e: Exception) {
+                _restaurantData.value = "Error: ${e.message}"
+            }
         }
-    }
-
-    private suspend fun getRestaurant(postCode: String){
-        _restaurantData.value = RetrofitClient.apiService.getRestaurants(postCode, limit = 1).toString()
     }
 }

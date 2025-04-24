@@ -4,15 +4,27 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.justeatrestaurantlookupworking.ui.theme.JustEatRestaurantLookupWorkingTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,14 +44,34 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun RestaurantData(modifier: Modifier = Modifier, viewModel: RestaurantViewModel = RestaurantViewModel()){
-    val data = viewModel.restaurantData.observeAsState().value
-    if (data != null) {
-        Text(
-            text = data,
-            modifier = modifier
-                .padding(18.dp)
+fun RestaurantData(
+    modifier: Modifier = Modifier,
+    viewModel: RestaurantViewModel = viewModel { RestaurantViewModel() }
+){
+    var postcode by remember { mutableStateOf("") }
+    val data = viewModel.restaurantData.observeAsState("Loading response").value
+    Column(modifier = modifier.padding(18.dp)) {
+        TextField(  //take user input of postcode
+            value = postcode,
+            onValueChange = { postcode = it },
+            label = { Text("Enter Postcode") },
+            modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button( //pass input postcode to getRestaurant function to make api call
+            onClick = {
+                viewModel.getRestaurant(postcode)
+            },
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text("Search")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(text = data)   //Change text to show restaurant data response
     }
 }
 
