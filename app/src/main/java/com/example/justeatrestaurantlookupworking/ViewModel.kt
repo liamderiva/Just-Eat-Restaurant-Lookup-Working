@@ -17,6 +17,6 @@ class ViewModel : ViewModel() {
     }
 
     private suspend fun getRestaurant(){
-        _restaurantData.value = RetrofitClient.apiService.getRestaurants().toString()
+        _restaurantData.value = RetrofitClient.apiService.getRestaurants(limit = 1).toString()
     }
 }
