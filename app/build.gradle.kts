@@ -62,4 +62,5 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)
     implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 }
