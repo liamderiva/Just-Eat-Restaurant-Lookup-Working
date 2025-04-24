@@ -12,11 +12,11 @@ class ViewModel : ViewModel() {
 
     init {
         viewModelScope.launch { //Coroutine scope (launched asynchronously)
-            getRestaurant()
+            getRestaurant("EC4M7RF")
         }
     }
 
-    private suspend fun getRestaurant(){
-        _restaurantData.value = RetrofitClient.apiService.getRestaurants(limit = 1).toString()
+    private suspend fun getRestaurant(postCode: String){
+        _restaurantData.value = RetrofitClient.apiService.getRestaurants(postCode, limit = 1).toString()
     }
 }
