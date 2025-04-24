@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun RestaurantData(modifier: Modifier = Modifier, viewModel: ViewModel = ViewModel()){
+fun RestaurantData(modifier: Modifier = Modifier, viewModel: RestaurantViewModel = RestaurantViewModel()){
     val data = viewModel.restaurantData.observeAsState().value
     if (data != null) {
         Text(

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class ViewModel : ViewModel() {
+class RestaurantViewModel : ViewModel() {
     private val _restaurantData = MutableLiveData("no data")
     val restaurantData: LiveData<String> get() = _restaurantData
 
