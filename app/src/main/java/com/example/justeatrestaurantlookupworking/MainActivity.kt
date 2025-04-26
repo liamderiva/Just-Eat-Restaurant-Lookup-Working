@@ -50,8 +50,12 @@ fun RestaurantData(
 ){
     var postcode by remember { mutableStateOf("") }
     val data = viewModel.restaurantData.observeAsState("Loading response").value
+    val restaurantNames = viewModel.restaurantNames.observeAsState("Loading response").value
+    val restaurantCuisines = viewModel.restaurantCuisines.observeAsState("Loading response").value
+    val restaurantData = viewModel.restaurantAllData.observeAsState("Loading response").value
     Column(modifier = modifier.padding(18.dp)) {
-        TextField(  //take user input of postcode
+        //take user input of postcode
+        TextField(
             value = postcode,
             onValueChange = { postcode = it },
             label = { Text("Enter Postcode") },
@@ -60,7 +64,8 @@ fun RestaurantData(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Button( //pass input postcode to getRestaurant function to make api call
+        //pass input postcode to getRestaurant function to make api call
+        Button(
             onClick = {
                 viewModel.getRestaurant(postcode)
             },
@@ -71,7 +76,11 @@ fun RestaurantData(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = data)   //Change text to show restaurant data response
+        //Change text to show restaurant data response
+        Text(text = data)
+        Text(text = restaurantNames)
+        Text(text = restaurantCuisines)
+        Text(text = restaurantData)
     }
 }
 
