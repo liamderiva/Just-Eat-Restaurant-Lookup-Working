@@ -49,9 +49,9 @@ fun RestaurantData(
     viewModel: RestaurantViewModel = viewModel { RestaurantViewModel() }
 ){
     var postcode by remember { mutableStateOf("") }
-    val data = viewModel.restaurantData.observeAsState("Loading response").value
-    val restaurantNames = viewModel.restaurantNames.observeAsState("Loading response").value
-    val restaurantCuisines = viewModel.restaurantCuisines.observeAsState("Loading response").value
+//    val data = viewModel.restaurantData.observeAsState("Loading response").value
+//    val restaurantNames = viewModel.restaurantNames.observeAsState("Loading response").value
+//    val restaurantCuisines = viewModel.restaurantCuisines.observeAsState("Loading response").value
     val restaurantData = viewModel.restaurantAllData.observeAsState("Loading response").value
     Column(modifier = modifier.padding(18.dp)) {
         //take user input of postcode
@@ -77,9 +77,9 @@ fun RestaurantData(
         Spacer(modifier = Modifier.height(16.dp))
 
         //Change text to show restaurant data response
-        Text(text = data)
-        Text(text = restaurantNames)
-        Text(text = restaurantCuisines)
+//        Text(text = data)
+//        Text(text = restaurantNames)
+//        Text(text = restaurantCuisines)
         Text(text = restaurantData)
     }
 }

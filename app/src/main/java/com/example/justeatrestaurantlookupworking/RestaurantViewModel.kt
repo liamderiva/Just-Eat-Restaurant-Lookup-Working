@@ -24,16 +24,16 @@ class RestaurantViewModel : ViewModel() {
     fun getRestaurant(postCode: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.apiService.getRestaurants(postCode, limit = 2)
+                val response = RetrofitClient.apiService.getRestaurants(postCode, limit = 10)
                 //_restaurantData.value = response.toString()
                 //_restaurantNames.value = response.restaurants.joinToString(separator = "\n") { it.name }
 
-                _restaurantAllData.value = response.restaurants.joinToString(separator = "\n") { restaurant ->
+                _restaurantAllData.value = response.restaurants.joinToString("\n\n") { restaurant ->
                     val cuisineNames = restaurant.cuisines.joinToString(", ") { it.name }
-                    "${restaurant.name} " +
-                            "– $cuisineNames " +
-                            "- ${restaurant.address.firstLine}, ${restaurant.address.postalCode}, ${restaurant.address.city} " +
-                            "- ${restaurant.rating.starRating}" }
+                    "${restaurant.name} \n" +
+                            "Cuisines: $cuisineNames \n" +
+                            "Address: ${restaurant.address.firstLine}, ${restaurant.address.postalCode}, ${restaurant.address.city} \n" +
+                            "Star Rating: ${restaurant.rating.starRating}" }
 
             } catch (e: Exception) {
                 _restaurantData.value = "Error: ${e.message}"
