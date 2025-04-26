@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -53,7 +55,9 @@ fun RestaurantData(
 //    val restaurantNames = viewModel.restaurantNames.observeAsState("Loading response").value
 //    val restaurantCuisines = viewModel.restaurantCuisines.observeAsState("Loading response").value
     val restaurantData = viewModel.restaurantAllData.observeAsState("Loading response").value
-    Column(modifier = modifier.padding(18.dp)) {
+    Column(modifier = modifier
+        .padding(18.dp)
+        .verticalScroll(rememberScrollState())) {
         //take user input of postcode
         TextField(
             value = postcode,
