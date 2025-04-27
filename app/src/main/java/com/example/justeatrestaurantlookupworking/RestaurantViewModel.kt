@@ -7,28 +7,25 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class RestaurantViewModel : ViewModel() {
-    //raw data
-    private val _restaurantData = MutableLiveData("No data")
-    val restaurantData: LiveData<String> get() = _restaurantData
 
     private val _restaurantAllData = MutableLiveData("No data")
-    val restaurantAllData: LiveData<String> get() = _restaurantAllData
-    private var fullRestaurantList: List<Restaurant> = emptyList()
+    //val restaurantAllData: LiveData<String> get() = _restaurantAllData
 
     private val _restaurantFilteredByCuisine = MutableLiveData("No data")
-    val restaurantFilteredByCuisine: LiveData<String> get() = _restaurantFilteredByCuisine
+    //val restaurantFilteredByCuisine: LiveData<String> get() = _restaurantFilteredByCuisine
 
     //-----Holds data to display on screen (updates here)
     private val _displayData = MutableLiveData("No data")
     val displayData: LiveData<String> get() = _displayData
+
+    //-----Hold ALL initially returned Restaurants from response
+    private var fullRestaurantList: List<Restaurant> = emptyList()
 
     fun getRestaurant(postCode: String) {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.apiService.getRestaurants(postCode, limit = 100) //100 returned
                 fullRestaurantList = response.restaurants
-
-                //_restaurantData.value = response.toString()
 
                 _restaurantAllData.value = fullRestaurantList.take(10).joinToString("\n\n") { restaurant ->
                     val cuisineNames = restaurant.cuisines.joinToString(", ") { it.name }
@@ -39,7 +36,7 @@ class RestaurantViewModel : ViewModel() {
                 _displayData.value = _restaurantAllData.value
 
             } catch (e: Exception) {
-                _restaurantData.value = "Error: ${e.message}"
+                _displayData.value = "Error: ${e.message}"
             }
         }
     }

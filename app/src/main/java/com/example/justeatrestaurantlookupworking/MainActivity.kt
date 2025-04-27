@@ -54,9 +54,8 @@ fun RestaurantData(
     viewModel: RestaurantViewModel = viewModel { RestaurantViewModel() }
 ){
     var postcode by remember { mutableStateOf("") }
-    val restaurantData = viewModel.restaurantAllData.observeAsState("Loading response").value
-
     val restaurantDisplayData = viewModel.displayData.observeAsState("Loading response").value
+
     Column(modifier = modifier
         .padding(18.dp)
         .verticalScroll(rememberScrollState())) {
@@ -80,44 +79,28 @@ fun RestaurantData(
             Text("Search")
         }
 
-        //val scrollState = rememberScrollState()
+        val scrollState = rememberScrollState()
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                //.horizontalScroll(scrollState)
+                .horizontalScroll(scrollState)
                 .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly//spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ){
-            //val cuisines = listOf("Pizza", "Burgers", "Curry", "Chicken", "Italian", "Indian", "American", "Mexican")
-            Button(
-                onClick = {
-                    viewModel.filterByCuisine("pizza")
-                },
-            ) {
-                Text("Pizza")
-            }
+            val cuisines = listOf("Pizza", "Burgers", "Curry", "Chicken", "Italian", "Indian", "American", "Mexican")
 
-            Button(
-                onClick = {
-                    viewModel.filterByCuisine("italian")
-                },
-            ) {
-                Text("Italian")
-            }
-
-            Button(
-                onClick = {
-                    viewModel.filterByCuisine("burgers")
-                },
-            ) {
-                Text("Burgers")
+            cuisines.forEach { cuisine ->
+                Button(onClick = {
+                    viewModel.filterByCuisine(cuisine)
+                }
+                ) {
+                    Text(cuisine)
+                }
             }
         }
-
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        //Change text to show restaurant data response
+        //Changes text to show restaurant data response
         Text(text = restaurantDisplayData)
     }
 }
