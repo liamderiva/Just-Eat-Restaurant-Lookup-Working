@@ -11,33 +11,54 @@ class RestaurantViewModel : ViewModel() {
     private val _restaurantData = MutableLiveData("No data")
     val restaurantData: LiveData<String> get() = _restaurantData
 
-    //just restaurant names
-    private val _restaurantNames = MutableLiveData("No data")
-    val restaurantNames: LiveData<String> get() = _restaurantNames
-
-    private val _restaurantCuisines = MutableLiveData("No data")
-    val restaurantCuisines: LiveData<String> get() = _restaurantCuisines
-
     private val _restaurantAllData = MutableLiveData("No data")
     val restaurantAllData: LiveData<String> get() = _restaurantAllData
+    private var fullRestaurantList: List<Restaurant> = emptyList()
+
+    private val _restaurantFilteredByCuisine = MutableLiveData("No data")
+    val restaurantFilteredByCuisine: LiveData<String> get() = _restaurantFilteredByCuisine
+
+    //-----Holds data to display on screen (updates here)
+    private val _displayData = MutableLiveData("No data")
+    val displayData: LiveData<String> get() = _displayData
 
     fun getRestaurant(postCode: String) {
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.apiService.getRestaurants(postCode, limit = 10)
-                //_restaurantData.value = response.toString()
-                //_restaurantNames.value = response.restaurants.joinToString(separator = "\n") { it.name }
+                val response = RetrofitClient.apiService.getRestaurants(postCode, limit = 100) //100 returned
+                fullRestaurantList = response.restaurants
 
-                _restaurantAllData.value = response.restaurants.joinToString("\n\n") { restaurant ->
+                //_restaurantData.value = response.toString()
+
+                _restaurantAllData.value = fullRestaurantList.take(10).joinToString("\n\n") { restaurant ->
                     val cuisineNames = restaurant.cuisines.joinToString(", ") { it.name }
                     "${restaurant.name} \n" +
                             "Cuisines: $cuisineNames \n" +
                             "Address: ${restaurant.address.firstLine}, ${restaurant.address.postalCode}, ${restaurant.address.city} \n" +
                             "Star Rating: ${restaurant.rating.starRating}" }
+                _displayData.value = _restaurantAllData.value
 
             } catch (e: Exception) {
                 _restaurantData.value = "Error: ${e.message}"
             }
+        }
+    }
+
+    fun filterByCuisine(cuisineChoice: String){
+        val filteredList = fullRestaurantList.filter { restaurant ->
+            restaurant.cuisines.any { cuisine ->
+                cuisine.name.contains(cuisineChoice, ignoreCase = true)
+            }
+        }.take(10)
+        _restaurantFilteredByCuisine.value = filteredList.joinToString("\n\n") { restaurant ->
+            val cuisineNames = restaurant.cuisines.joinToString(", ") { it.name }
+            "${restaurant.name} \n" +
+                    "Cuisines: $cuisineNames \n" +
+                    "Address: ${restaurant.address.firstLine}, ${restaurant.address.postalCode}, ${restaurant.address.city} \n" +
+                    "Star Rating: ${restaurant.rating.starRating}" }
+        _displayData.value = _restaurantFilteredByCuisine.value
+        if (filteredList.isNotEmpty()){
+            _restaurantFilteredByCuisine.value = "No restaurants found with cuisine: $cuisineChoice"
         }
     }
 }
